@@ -5,7 +5,7 @@ import {IControllerRoute} from "./route.interface";
 export abstract class BaseController {
     private readonly _router: Router;
     
-    constructor(private logger: LoggerService) {
+    protected constructor(private logger: LoggerService) {
         this._router = Router();
     }
     
@@ -17,7 +17,7 @@ export abstract class BaseController {
        return res.sendStatus(201).send();
     }
 
-    public send<T>(res: Response, code: number, message: T) {
+    public send<T>(res: Response , code: number, message: T) {
         res.type('application/json');
         return res.status(code).json(message);
     }
@@ -29,7 +29,7 @@ export abstract class BaseController {
     
     protected bindRoutes(routes: IControllerRoute[]) {
         for(const route of routes) {
-            this.logger.log(`Binding route ${route.method} ${route.path}`);
+            this.logger.log(`Binding route [${route.method}] ${route.path}`);
             const handler = route.func.bind(this);
             this._router[route.method](route.path, handler);
         }
