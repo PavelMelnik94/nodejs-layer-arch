@@ -1,5 +1,5 @@
 {
-    "files.exclude": {
+	"files.exclude": {
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
@@ -8,5 +8,11 @@
         "**/Thumbs.db": true,
         "**/node_modules": true
     },
-    "docwriter.style": "JSDoc"
+	"docwriter.style": "JSDoc",
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	}
 }
