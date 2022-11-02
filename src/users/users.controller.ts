@@ -1,3 +1,4 @@
+import { IUserService } from './users.service.interface';
 import { ExpressReturnType } from './../common/route.interface';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
@@ -13,7 +14,10 @@ import { User } from './user.entity';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.UsersService) private userService: IUserService,
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{ path: '/login', func: this.login, method: 'post' },
@@ -30,10 +34,12 @@ export class UsersController extends BaseController implements IUserController {
 		{ body }: Request<{}, {}, UserRegisterDto>,
 		res: Response,
 		next: NextFunction,
-	): Promise<ExpressReturnType> {
-		const newUser = new User(body.email, body.name);
-		await newUser.setPassword(body.password);
-		console.log(body);
-		return this.ok(res, newUser);
+	): Promise<void> {
+		const result = await this.userService.createUser(body);
+
+		if (!result) {
+			return next(new HTTPError(422, 'ошибка регистрации', 'Пользователь уже существует'));
+		}
+		this.ok(res, { result: 'Пользователь успешно зарегистрирован' });
 	}
 }
