@@ -1,8 +1,9 @@
 import { Response, Router } from 'express';
 import { injectable } from 'inversify';
-import 'reflect-metadata';
 import { ILogger } from '../logger/logger.interface';
 import { ExpressReturnType, IControllerRoute } from './route.interface';
+export { Router } from 'express';
+import 'reflect-metadata';
 
 @injectable()
 export abstract class BaseController {
@@ -10,15 +11,10 @@ export abstract class BaseController {
 
 	constructor(private logger: ILogger) {
 		this._router = Router();
-		this.logger = logger;
 	}
 
 	get router(): Router {
 		return this._router;
-	}
-
-	public created(res: Response): ExpressReturnType {
-		return res.sendStatus(201).send();
 	}
 
 	public send<T>(res: Response, code: number, message: T): ExpressReturnType {
@@ -30,14 +26,17 @@ export abstract class BaseController {
 		return this.send<T>(res, 200, message);
 	}
 
+	public created(res: Response): ExpressReturnType {
+		return res.sendStatus(201);
+	}
+
 	protected bindRoutes(routes: IControllerRoute[]): void {
 		for (const route of routes) {
-			this.logger.log(`Binding route [${route.method}] ${route.path}`);
-
-			const middleware = route.middlewares?.map((m) => m.execute.bind(m)) || [];
+			this.logger.log(`[${route.method}] ${route.path}`);
+			const middleware = route.middlewares?.map((m) => m.execute.bind(m));
 			const handler = route.func.bind(this);
 			const pipeline = middleware ? [...middleware, handler] : handler;
-			this._router[route.method](route.path, pipeline);
+			this.router[route.method](route.path, pipeline);
 		}
 	}
 }
