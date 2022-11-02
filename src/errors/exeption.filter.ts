@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { TYPES } from '../types';
-import { ILogger } from './../logger/logger.interface';
+import { ILogger } from '../logger/logger.interface';
 import { IExceptionFilter } from './exception.filter.interface';
 import { HTTPError } from './http-error.class';
 
