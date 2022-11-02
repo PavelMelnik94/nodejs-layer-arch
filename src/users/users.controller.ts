@@ -5,7 +5,10 @@ import { BaseController } from '../common/base.controller';
 import { HTTPError } from '../errors/http-error.class';
 import { ILogger } from './../logger/logger.interface';
 import { TYPES } from './../types';
+import { UserLoginDto } from './dto/user-login.dto';
+import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserController } from './users.controller.interface';
+
 @injectable()
 export class UsersController extends BaseController implements IUserController {
 	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
@@ -17,14 +20,20 @@ export class UsersController extends BaseController implements IUserController {
 	}
 
 	public async register(
-		_req: Request,
+		req: Request<{}, {}, UserLoginDto>,
 		res: Response,
-		_next: NextFunction,
+		next: NextFunction,
 	): Promise<Response<any, Record<string, any>>> {
+		console.log(req.body);
 		return this.ok(res, 'Register');
 	}
 
-	public async login(_req: Request, _res: Response, next: NextFunction): Promise<void> {
+	public async login(
+		req: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		console.log(req.body);
 		next(new HTTPError(401, 'ошибка авторизации', 'Пользователь не авторизован'));
 	}
 }
