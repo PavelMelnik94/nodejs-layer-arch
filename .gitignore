@@ -81,6 +81,10 @@ web_modules/
 .env.production.local
 .env.local
 
+#prisma
+/prisma/dev.db
+/prisma/dev.db-journal
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -104,7 +108,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Docusaurus cache and generated files
 .docusaurus
