@@ -43,6 +43,7 @@ export class UserController extends BaseController implements IUserController {
 			next(new HTTPError(401, 'ошибка авторизации', 'login'));
 		}
 		const token = await this.signJWT(req.body.email, this.configService.get('JWT_SECRET'));
+		
 		this.ok(res, { token });
 	}
 
